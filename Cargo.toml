@@ -1,0 +1,77 @@
+[package]
+name = "rust-kernel-engine"
+version = "0.1.0"
+edition = "2021"
+authors = ["RustKernelEngine Team"]
+description = "High-performance network server optimized for Linux networking performance"
+license = "MIT"
+rust-version = "1.79"
+
+[[bin]]
+name = "server"
+path = "src/main.rs"
+
+[[bin]]
+name = "bench"
+path = "bench/run_bench.rs"
+
+[features]
+default = ["io_uring"]
+io_uring = ["dep:io-uring"]
+dpdk = []
+ebpf = ["dep:aya"]
+
+[dependencies]
+# Core async runtime
+tokio = { version = "1.40", features = ["full"] }
+futures = "0.3"
+
+# Network I/O
+io-uring = { version = "0.6", optional = true }
+libc = "0.2"
+nix = { version = "0.28", features = ["socket", "sched", "mman"] }
+
+# Lock-free data structures
+crossbeam = "0.8"
+parking_lot = "0.12"
+
+# HTTP parsing
+httparse = "1.9"
+
+# CPU affinity
+core_affinity = "0.8"
+
+# Metrics and monitoring
+prometheus = { version = "0.13", features = ["process"] }
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+
+# Serialization for API
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# eBPF (optional)
+aya = { version = "0.12", optional = true }
+
+# Utilities
+bytes = "1.7"
+anyhow = "1.0"
+thiserror = "1.0"
+num_cpus = "1.17"
+
+[dev-dependencies]
+criterion = "0.5"
+reqwest = { version = "0.12", features = ["blocking"] }
+tempfile = "3.13"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+strip = true
+panic = "abort"
+
+[profile.bench]
+inherits = "release"

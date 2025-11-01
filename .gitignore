@@ -1,0 +1,24 @@
+# Build artifacts
+/target
+Cargo.lock
+
+# Benchmark results
+benchmark_results*.csv
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test artifacts
+/static
+
+# Temporary files
+*.tmp
+*.log
